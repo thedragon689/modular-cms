@@ -14,13 +14,23 @@ export const useAuthStore = create(
         set({ loading: true, error: null });
         try {
           const response = await api.post('/auth/login', { email, password });
+          const userData = response.data.user;
+          const tokenData = response.data.token;
+          
+          // Update state synchronously
           set({
-            user: response.data.user,
-            token: response.data.token,
+            user: userData,
+            token: tokenData,
             loading: false,
             error: null,
           });
-          api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+          
+          // Set auth header
+          api.defaults.headers.common['Authorization'] = `Bearer ${tokenData}`;
+          
+          // Force persist to complete
+          await new Promise(resolve => setTimeout(resolve, 50));
+          
           return { success: true };
         } catch (error) {
           const message = error.response?.data?.message || 'Login failed';
@@ -33,13 +43,23 @@ export const useAuthStore = create(
         set({ loading: true, error: null });
         try {
           const response = await api.post('/auth/register', { email, password, name });
+          const userData = response.data.user;
+          const tokenData = response.data.token;
+          
+          // Update state synchronously
           set({
-            user: response.data.user,
-            token: response.data.token,
+            user: userData,
+            token: tokenData,
             loading: false,
             error: null,
           });
-          api.defaults.headers.common['Authorization'] = `Bearer ${response.data.token}`;
+          
+          // Set auth header
+          api.defaults.headers.common['Authorization'] = `Bearer ${tokenData}`;
+          
+          // Force persist to complete
+          await new Promise(resolve => setTimeout(resolve, 50));
+          
           return { success: true };
         } catch (error) {
           const message = error.response?.data?.message || 'Registration failed';

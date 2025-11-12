@@ -37,10 +37,9 @@ const Login = () => {
     }
 
     if (result.success) {
-      // Wait for Zustand persist to save state, then navigate
-      setTimeout(() => {
-        navigate('/dashboard', { replace: true });
-      }, 150);
+      // Force state update and navigate
+      // The useEffect will also trigger when user state updates
+      navigate('/dashboard', { replace: true });
     } else {
       setError(result.error);
     }
