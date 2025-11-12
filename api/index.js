@@ -7,18 +7,18 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { dirname } from 'path';
 
-// Import routes directly
-import authRoutes from '../backend/routes/auth.routes.js';
-import userRoutes from '../backend/routes/users.routes.js';
-import clientRoutes from '../backend/routes/clients.routes.js';
-import blogRoutes from '../backend/routes/blog.routes.js';
-import pageRoutes from '../backend/routes/pages.routes.js';
-import mediaRoutes from '../backend/routes/media.routes.js';
-import settingsRoutes from '../backend/routes/settings.routes.js';
-import dashboardRoutes from '../backend/routes/dashboard.routes.js';
+// Import routes directly from api folder
+import authRoutes from './routes/auth.routes.js';
+import userRoutes from './routes/users.routes.js';
+import clientRoutes from './routes/clients.routes.js';
+import blogRoutes from './routes/blog.routes.js';
+import pageRoutes from './routes/pages.routes.js';
+import mediaRoutes from './routes/media.routes.js';
+import settingsRoutes from './routes/settings.routes.js';
+import dashboardRoutes from './routes/dashboard.routes.js';
 
 // Import database
-import { initDatabase } from '../backend/config/database.js';
+import { initDatabase } from './config/database.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
@@ -35,8 +35,8 @@ app.use(cors({
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-// Static files
-app.use('/uploads', express.static(path.join(__dirname, '../backend/uploads')));
+// Static files (uploads handled separately in serverless)
+// app.use('/uploads', express.static(path.join(__dirname, '../backend/uploads')));
 
 // Routes
 app.use('/api/auth', authRoutes);
