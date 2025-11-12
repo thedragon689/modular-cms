@@ -12,16 +12,32 @@ const __dirname = dirname(__filename);
 
 const router = express.Router();
 
-// Ensure uploads directory exists
+// Ensure uploads directory exists (only in non-serverless environments)
 const uploadsDir = path.join(__dirname, '../uploads');
-if (!fs.existsSync(uploadsDir)) {
-  fs.mkdirSync(uploadsDir, { recursive: true });
+// In serverless (Vercel), use /tmp for temporary files
+const isServerless = process.env.VERCEL === '1' || process.env.VERCEL_ENV;
+const finalUploadsDir = isServerless ? '/tmp/uploads' : uploadsDir;
+
+if (!isServerless && !fs.existsSync(uploadsDir)) {
+  try {
+    fs.mkdirSync(uploadsDir, { recursive: true });
+  } catch (error) {
+    console.warn('Could not create uploads directory:', error.message);
+  }
+}
+
+if (isServerless && !fs.existsSync(finalUploadsDir)) {
+  try {
+    fs.mkdirSync(finalUploadsDir, { recursive: true });
+  } catch (error) {
+    console.warn('Could not create temp uploads directory:', error.message);
+  }
 }
 
 // Configure multer
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, uploadsDir);
+    cb(null, finalUploadsDir);
   },
   filename: (req, file, cb) => {
     const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
