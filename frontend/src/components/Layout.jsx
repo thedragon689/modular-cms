@@ -16,6 +16,7 @@ import {
   User,
 } from 'lucide-react';
 import { useState } from 'react';
+import ThemeToggle from './ThemeToggle';
 
 const Layout = () => {
   const { user, logout } = useAuthStore();
